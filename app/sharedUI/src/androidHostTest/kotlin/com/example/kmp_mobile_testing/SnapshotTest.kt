@@ -3,6 +3,7 @@ package com.example.kmp_mobile_testing
 import androidx.compose.runtime.Composable
 import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.captureRoboImage
+import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -17,7 +18,11 @@ import org.robolectric.annotation.GraphicsMode
  * - `sdk = [36]` is the Android version Robolectric emulates (the greeting prints it, too).
  * - `w390dp-h844dp-mdpi` is the logical size of the iOS goldens (iPhone 13, 390x844pt) at 1x,
  *   so both platforms' images line up and stay small.
+ *
+ * The class is also the JUnit category of every suite that extends it, which is how
+ * `-Psnapshots=only|skip` finds the snapshot tests (see `app/sharedUI/build.gradle.kts`).
  */
+@Category(SnapshotTest::class)
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [36], qualifiers = "w390dp-h844dp-mdpi")

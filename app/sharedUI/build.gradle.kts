@@ -68,7 +68,19 @@ kotlin {
 //                            With no mode at all captureRoboImage renders nothing, and a plain IDE
 //                            run would pass without composing a single screen.
 val snapshotGoldens = layout.projectDirectory.dir("src/androidHostTest/snapshots")
+val snapshotCategory = "com.example.kmp_mobile_testing.SnapshotTest"
 tasks.withType<Test>().configureEach {
+    // CI runs the snapshot tests in a workflow of their own (see bitrise.yml): -Psnapshots=only runs
+    // just them, -Psnapshots=skip everything else. A suite is picked by its JUnit category, inherited
+    // from the SnapshotTest base class, so a new suite can't end up in neither of the two runs.
+    when (val snapshots = providers.gradleProperty("snapshots").orNull) {
+        null -> {}
+        "only" -> useJUnit { includeCategories(snapshotCategory) }
+        "skip" -> useJUnit { excludeCategories(snapshotCategory) }
+        else -> error("-Psnapshots must be 'only' or 'skip', not '$snapshots'")
+    }
+    // Rendering is CPU-bound and single-threaded within one test JVM, so many suites pay off in forks.
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
     val record = providers.gradleProperty("roborazzi.record").getOrElse("false").toBoolean()
     val verify = providers.gradleProperty("roborazzi.verify").getOrElse("false").toBoolean()
     // Roborazzi resolves the pair to VerifyAndRecord, which overwrites the golden it just failed.
@@ -86,6 +98,8 @@ tasks.withType<Test>().configureEach {
         outputs.upToDateWhen { false }
         outputs.cacheIf { false }
     }
+    // Robolectric's SDK 36 sandbox calls jdk.internal.access.SharedSecrets to fake FileDescriptors.
+    // Without the export every test dies in setUpApplicationState, before anything renders.
     jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED")
 }
 
