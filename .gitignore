@@ -20,3 +20,6 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+# Record mode of the iOS snapshot tests, written and removed by scripts/snapshots.sh.
+# Committed, it would switch the test runs of every checkout to re-recording.
+app/iosApp/iosAppTests/.snapshot-record-mode
