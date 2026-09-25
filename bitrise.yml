@@ -10,6 +10,11 @@ project_type: kotlin-multiplatform
 # Unmatched paths (README.md, .gitignore, new modules) trigger nothing,
 # so add new modules to the regexes.
 #
+# Each pipeline runs its platform's snapshot tests in a workflow of their own
+# (android_snapshots, ios_snapshots), in parallel with the unit tests and builds:
+# a large set of goldens doesn't hold those up, and a changed screen doesn't
+# block the build artifacts.
+#
 # Pushing a v* tag (e.g. v1.0.1) runs the `testflight` workflow, which uploads
 # a signed build to App Store Connect for TestFlight. It needs an Apple service
 # connection with an App Store Connect API key, and an Apple Distribution
@@ -27,6 +32,7 @@ pipelines:
           regex: '^((app/androidApp|app/sharedLogic|app/sharedUI|core|server|gradle)/.*|.*\.gradle\.kts|gradle\.properties|gradlew|bitrise\.yml)$'
     workflows:
       android: {}
+      android_snapshots: {}
   ios:
     triggers:
       push:
@@ -39,6 +45,7 @@ pipelines:
           regex: '^((app/iosApp|app/sharedLogic|core|gradle)/.*|.*\.gradle\.kts|gradle\.properties|gradlew|bitrise\.yml)$'
     workflows:
       ios: {}
+      ios_snapshots: {}
 
 workflows:
   android:
@@ -60,11 +67,49 @@ workflows:
             :core:testAndroidHostTest
             :core:jvmTest
             :server:test
+        # The snapshot tests of :app:sharedUI run in android_snapshots instead.
+        # --continue is the step's default.
+        - gradlew_command_flags: --continue -Psnapshots=skip
     - gradle-runner@6:
         title: Build debug APK
         inputs:
         - gradle_task: ":app:androidApp:assembleDebug"
     - save-gradle-cache@1: {}
+    - deploy-to-bitrise-io@2: {}
+
+  android_snapshots:
+    summary: Compose snapshot tests, compared with the goldens in app/sharedUI/src/androidHostTest/snapshots.
+    meta:
+      bitrise.io:
+        stack: ubuntu-noble-24.04-bitrise-2025-android
+        machine_type_id: standard
+    steps:
+    - git-clone@8: {}
+    # The android workflow, running alongside, saves this cache.
+    - restore-gradle-cache@3: {}
+    - gradle-unit-test@2:
+        title: Compose snapshot tests
+        inputs:
+        - test_task: ":app:sharedUI:testAndroidHostTest"
+        # Only the snapshot suites, and a screen that no longer matches its golden fails the build
+        # (= scripts/snapshots.sh verify android). --continue is the step's default.
+        - gradlew_command_flags: --continue -Psnapshots=only -Proborazzi.verify=true
+    - script@1:
+        title: Export snapshot diffs
+        is_always_run: true
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # Every mismatch leaves <scenario>_compare.png (golden | diff | new) and
+            # <scenario>_actual.png behind; deploy them so a red build can be reviewed.
+            set -euo pipefail
+            shopt -s nullglob
+            diffs=(app/sharedUI/build/outputs/roborazzi/*.png)
+            if [ ${#diffs[@]} -eq 0 ]; then
+              echo "No snapshot diffs"
+              exit 0
+            fi
+            cp "${diffs[@]}" "$BITRISE_DEPLOY_DIR/"
     - deploy-to-bitrise-io@2: {}
 
   ios:
@@ -76,6 +121,7 @@ workflows:
     steps:
     - git-clone@8: {}
     - restore-gradle-cache@3: {}
+    - restore-spm-cache@3: {}
     - gradle-unit-test@2:
         title: Kotlin iOS simulator tests
         inputs:
@@ -104,6 +150,30 @@ workflows:
         - scheme: iosApp
         - configuration: Debug
     - save-gradle-cache@1: {}
+    - save-spm-cache@1: {}
+    - deploy-to-bitrise-io@2: {}
+
+  ios_snapshots:
+    summary: SwiftUI snapshot tests, compared with the goldens in app/iosApp/iosAppTests/__Snapshots__.
+    meta:
+      bitrise.io:
+        stack: osx-xcode-27.0.x
+        machine_type_id: g2.mac.medium
+    steps:
+    - git-clone@8: {}
+    # The ios workflow, running alongside, saves these caches.
+    - restore-gradle-cache@3: {}
+    - restore-spm-cache@3: {}
+    - xcode-test@6:
+        title: SwiftUI snapshot tests
+        inputs:
+        - project_path: app/iosApp/iosApp.xcodeproj
+        - scheme: iosApp
+        # The goldens were recorded on this simulator; keep it in sync with scripts/snapshots.sh.
+        # On a mismatch, the reference/failure/difference images are in the deployed attachments zip.
+        - destination: platform=iOS Simulator,name=iPhone 17,OS=27.0
+        # No retries: a first attempt records a missing golden, so a retry would pass against it.
+        - test_repetition_mode: none
     - deploy-to-bitrise-io@2: {}
 
   testflight:
