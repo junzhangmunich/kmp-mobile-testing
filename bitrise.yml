@@ -15,10 +15,15 @@ project_type: kotlin-multiplatform
 # a large set of goldens doesn't hold those up, and a changed screen doesn't
 # block the build artifacts.
 #
-# Pushing a v* tag (e.g. v1.0.1) runs the `testflight` workflow, which uploads
-# a signed build to App Store Connect for TestFlight. It needs an Apple service
-# connection with an App Store Connect API key, and an Apple Distribution
-# certificate uploaded to the project's Code Signing settings.
+# Pushing a v* tag (e.g. v1.0.1) runs both release workflows, in parallel:
+# - `testflight` uploads a signed build to App Store Connect for TestFlight. It
+#   needs an Apple service connection with an App Store Connect API key, and an
+#   Apple Distribution certificate uploaded to the project's Code Signing settings.
+# - `google_play` uploads a signed app bundle to the internal testing track of
+#   Google Play. It needs the upload keystore uploaded to the project's Code
+#   Signing settings, and the JSON key of a Google Play service account uploaded
+#   to its files as SERVICE_ACCOUNT_JSON_KEY. Google Play takes API uploads only
+#   after the app's first bundle was uploaded by hand in Play Console.
 pipelines:
   android:
     triggers:
@@ -201,5 +206,37 @@ workflows:
             COMPILER_INDEX_STORE_ENABLE = NO
             CURRENT_PROJECT_VERSION = $BITRISE_BUILD_NUMBER
     - deploy-to-itunesconnect-application-loader@2: {}
+    - save-gradle-cache@1: {}
+    - deploy-to-bitrise-io@2: {}
+
+  google_play:
+    summary: Signed release bundle of the Android app, uploaded to the internal testing track of Google Play.
+    triggers:
+      tag:
+      - name: "v*"
+    meta:
+      bitrise.io:
+        stack: ubuntu-noble-24.04-bitrise-2025-android
+        machine_type_id: standard
+    steps:
+    - git-clone@8: {}
+    - restore-gradle-cache@3: {}
+    - gradle-runner@6:
+        title: Build release bundle
+        inputs:
+        - gradle_task: ":app:androidApp:bundleRelease"
+        # Google Play rejects a version code that was already uploaded,
+        # so use the Bitrise build number. --stacktrace is the step's default.
+        - gradle_options: --stacktrace -PversionCode=$BITRISE_BUILD_NUMBER
+    # CI has no keystore.properties, so Gradle leaves the bundle unsigned;
+    # this signs it with the upload keystore from the Code Signing settings.
+    - sign-apk@2: {}
+    - google-play-deploy@4:
+        inputs:
+        - service_account_json_key_path: $BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
+        # The applicationId in app/androidApp/build.gradle.kts.
+        - package_name: com.example.kmp_mobile_testing
+        # Google Play's counterpart of TestFlight. The step's default is alpha (closed testing).
+        - track: internal
     - save-gradle-cache@1: {}
     - deploy-to-bitrise-io@2: {}

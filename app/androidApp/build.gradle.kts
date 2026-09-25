@@ -34,7 +34,9 @@ android {
         applicationId = "com.example.kmp_mobile_testing"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
+        // Google Play rejects a version code that was already uploaded, so the google_play workflow
+        // (see bitrise.yml) passes the Bitrise build number as -PversionCode.
+        versionCode = providers.gradleProperty("versionCode").getOrElse("1").toInt()
         versionName = "1.0"
     }
     packaging {
