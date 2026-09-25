@@ -1,0 +1,7 @@
+TEAM_ID=
+
+PRODUCT_NAME=Kmpmobiletesting
+PRODUCT_BUNDLE_IDENTIFIER=com.example.kmp_mobile_testing.Kmpmobiletesting$(TEAM_ID)
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0
