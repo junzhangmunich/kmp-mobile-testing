@@ -2,17 +2,42 @@ format_version: "17"
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: kotlin-multiplatform
 
-# Pushes to main and all pull requests run the `ci` pipeline.
-# Its `android` and `ios` workflows run in parallel on separate machines.
+# Pushes to main and pull requests run the `android` and/or `ios` pipeline,
+# depending on the changed files (regex over repo-relative paths).
+# Shared modules, Gradle files and this file run both. Any *.gradle.kts counts:
+# Gradle configures every module, so one broken script breaks both platforms.
+# The iOS app embeds only sharedLogic, so sharedUI and server changes skip iOS.
+# Unmatched paths (README.md, .gitignore, new modules) trigger nothing,
+# so add new modules to the regexes.
+#
+# Pushing a v* tag (e.g. v1.0.1) runs the `testflight` workflow, which uploads
+# a signed build to App Store Connect for TestFlight. It needs an Apple service
+# connection with an App Store Connect API key, and an Apple Distribution
+# certificate uploaded to the project's Code Signing settings.
 pipelines:
-  ci:
+  android:
     triggers:
       push:
       - branch: main
+        changed_files:
+          regex: '^((app/androidApp|app/sharedLogic|app/sharedUI|core|server|gradle)/.*|.*\.gradle\.kts|gradle\.properties|gradlew|bitrise\.yml)$'
       pull_request:
       - source_branch: "*"
+        changed_files:
+          regex: '^((app/androidApp|app/sharedLogic|app/sharedUI|core|server|gradle)/.*|.*\.gradle\.kts|gradle\.properties|gradlew|bitrise\.yml)$'
     workflows:
       android: {}
+  ios:
+    triggers:
+      push:
+      - branch: main
+        changed_files:
+          regex: '^((app/iosApp|app/sharedLogic|core|gradle)/.*|.*\.gradle\.kts|gradle\.properties|gradlew|bitrise\.yml)$'
+      pull_request:
+      - source_branch: "*"
+        changed_files:
+          regex: '^((app/iosApp|app/sharedLogic|core|gradle)/.*|.*\.gradle\.kts|gradle\.properties|gradlew|bitrise\.yml)$'
+    workflows:
       ios: {}
 
 workflows:
@@ -78,5 +103,33 @@ workflows:
         - project_path: app/iosApp/iosApp.xcodeproj
         - scheme: iosApp
         - configuration: Debug
+    - save-gradle-cache@1: {}
+    - deploy-to-bitrise-io@2: {}
+
+  testflight:
+    summary: Signed App Store build of the iOS app, uploaded to App Store Connect for TestFlight.
+    triggers:
+      tag:
+      - name: "v*"
+    meta:
+      bitrise.io:
+        stack: osx-xcode-27.0.x
+        machine_type_id: g2.mac.medium
+    steps:
+    - git-clone@8: {}
+    - restore-gradle-cache@3: {}
+    - xcode-archive@6:
+        inputs:
+        - project_path: app/iosApp/iosApp.xcodeproj
+        - scheme: iosApp
+        - configuration: Release
+        - distribution_method: app-store
+        - automatic_code_signing: api-key
+        # App Store Connect rejects a build number that was already uploaded,
+        # so use the Bitrise build number. The first line is the step's default.
+        - xcconfig_content: |-
+            COMPILER_INDEX_STORE_ENABLE = NO
+            CURRENT_PROJECT_VERSION = $BITRISE_BUILD_NUMBER
+    - deploy-to-itunesconnect-application-loader@2: {}
     - save-gradle-cache@1: {}
     - deploy-to-bitrise-io@2: {}

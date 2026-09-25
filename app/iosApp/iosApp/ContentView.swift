@@ -2,7 +2,12 @@ import SwiftUI
 import SharedLogic
 
 struct ContentView: View {
-    @State private var showContent = false
+    @State private var showContent: Bool
+
+    init(initialShowContent: Bool = false) {
+        _showContent = State(initialValue: initialShowContent)
+    }
+
     var body: some View {
         VStack {
             Button("Click me!") {

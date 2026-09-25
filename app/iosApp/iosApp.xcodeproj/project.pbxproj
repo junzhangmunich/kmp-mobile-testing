@@ -6,7 +6,22 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		554EF3A992BA1F9EE6B6C1AC /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 20F6A554B36738EA2C6A1053 /* SnapshotTesting */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D306BE85084F7B0A0B90EAC1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B4C315170112501BA4700625 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5824E58E30C2D80DDC885073;
+			remoteInfo = iosApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		06F68F8017A3ABC39C6ABF3B /* iosAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B931EAAAA0E06ECE2DBEA22 /* Kmpmobiletesting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kmpmobiletesting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -17,6 +32,13 @@
 				Info.plist,
 			);
 			target = 5824E58E30C2D80DDC885073 /* iosApp */;
+		};
+		A2370210F68E2590A71949F6 /* Exceptions for "iosAppTests" folder in "iosAppTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				__Snapshots__,
+			);
+			target = 2DAC783A893FCF79DBD3110A /* iosAppTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -29,6 +51,14 @@
 			path = iosApp;
 			sourceTree = "<group>";
 		};
+		CBFA05FF6FF46F07D422C48C /* iosAppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A2370210F68E2590A71949F6 /* Exceptions for "iosAppTests" folder in "iosAppTests" target */,
+			);
+			path = iosAppTests;
+			sourceTree = "<group>";
+		};
 		FD17D0B975F4FCB1DECBF4EC /* Configuration */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Configuration;
@@ -37,6 +67,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		36C4042D8DBFA4BD477317D1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				554EF3A992BA1F9EE6B6C1AC /* SnapshotTesting in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D0E25F22BAC84617E089D8A9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -47,26 +85,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9DA4F3AF4373A97E65A6D0D2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5B931EAAAA0E06ECE2DBEA22 /* Kmpmobiletesting.app */,
+				06F68F8017A3ABC39C6ABF3B /* iosAppTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F3B763FEF17A229EB8D75AD5 = {
 			isa = PBXGroup;
 			children = (
 				FD17D0B975F4FCB1DECBF4EC /* Configuration */,
 				24EFC86534B8A71DFBB0C494 /* iosApp */,
+				CBFA05FF6FF46F07D422C48C /* iosAppTests */,
 				9DA4F3AF4373A97E65A6D0D2 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		9DA4F3AF4373A97E65A6D0D2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5B931EAAAA0E06ECE2DBEA22 /* Kmpmobiletesting.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2DAC783A893FCF79DBD3110A /* iosAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30E6296F3A037C0699C6E11B /* Build configuration list for PBXNativeTarget "iosAppTests" */;
+			buildPhases = (
+				2E9E54E74C4D8356879BBDBC /* Sources */,
+				36C4042D8DBFA4BD477317D1 /* Frameworks */,
+				0FC8FA76F59609E79EB15D3C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				011729322D7496763D4E86EA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CBFA05FF6FF46F07D422C48C /* iosAppTests */,
+			);
+			name = iosAppTests;
+			packageProductDependencies = (
+				20F6A554B36738EA2C6A1053 /* SnapshotTesting */,
+			);
+			productName = iosAppTests;
+			productReference = 06F68F8017A3ABC39C6ABF3B /* iosAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		5824E58E30C2D80DDC885073 /* iosApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6E06F4A954FD2EF8FF081E8D /* Build configuration list for PBXNativeTarget "iosApp" */;
@@ -100,6 +164,10 @@
 				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
+					2DAC783A893FCF79DBD3110A = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 5824E58E30C2D80DDC885073;
+					};
 					5824E58E30C2D80DDC885073 = {
 						CreatedOnToolsVersion = 16.2;
 					};
@@ -114,18 +182,29 @@
 			);
 			mainGroup = F3B763FEF17A229EB8D75AD5;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				02C5784896DDC668BEDCE4B0 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9DA4F3AF4373A97E65A6D0D2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				5824E58E30C2D80DDC885073 /* iosApp */,
+				2DAC783A893FCF79DBD3110A /* iosAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0DBD0317ABBEB11EF297ED1C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0FC8FA76F59609E79EB15D3C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -164,7 +243,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2E9E54E74C4D8356879BBDBC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		011729322D7496763D4E86EA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5824E58E30C2D80DDC885073 /* iosApp */;
+			targetProxy = D306BE85084F7B0A0B90EAC1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0AEF31628EDC9BB69E4EDD90 /* Debug */ = {
@@ -290,34 +384,6 @@
 			};
 			name = Release;
 		};
-		D258A61B8E473BB4947D2A7E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = arm64;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "${TEAM_ID}";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iosApp/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
 		3D8E45A0AB9CC9E6175F4B24 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -346,9 +412,80 @@
 			};
 			name = Release;
 		};
+		87EEA37E985035B8C0D65E7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.kmp_mobile_testing.iosAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kmpmobiletesting.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kmpmobiletesting";
+			};
+			name = Release;
+		};
+		D258A61B8E473BB4947D2A7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iosApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E611846DAC2CA370EB01F3C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.kmp_mobile_testing.iosAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kmpmobiletesting.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kmpmobiletesting";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		30E6296F3A037C0699C6E11B /* Build configuration list for PBXNativeTarget "iosAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E611846DAC2CA370EB01F3C6 /* Debug */,
+				87EEA37E985035B8C0D65E7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4AC76E58B4A489AC7E4E81FF /* Build configuration list for PBXProject "iosApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -368,6 +505,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		02C5784896DDC668BEDCE4B0 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.19.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		20F6A554B36738EA2C6A1053 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02C5784896DDC668BEDCE4B0 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B4C315170112501BA4700625 /* Project object */;
 }

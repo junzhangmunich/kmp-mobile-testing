@@ -21,9 +21,9 @@ import kmpmobiletesting.app.sharedui.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
-fun App() {
+fun App(initialShowContent: Boolean = false) {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
+        var showContent by remember { mutableStateOf(initialShowContent) }
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primaryContainer)
